@@ -222,26 +222,28 @@
 
     function addStar() {
       particles.push({
-        x: Math.random() * canvas.width,
-        y: 0,
+        x: Math.random() * canvas.width * 0.3,
+        y: Math.random() * canvas.height * 0.1,
+        speedX: 1 + Math.random() * 1.5,
+        speedY: 1 + Math.random() * 1.5,
         radius: Math.random() * 1.5 + 0.5,
-        speed: Math.random() * 2 + 1,
         alpha: 1,
+        fade: 0.004,
         color: '#ffffff'
       });
     }
 
-    function createBurst(x, y, color = '#ffffff') {
-      for (let i = 0; i < 10; i++) {
+    function createBurst(x, y) {
+      const colors = ['#00ffff', '#ffffff'];
+      for (let i = 0; i < 15; i++) {
         particles.push({
-          x,
-          y,
-          radius: Math.random() * 3 + 1,
+          x, y,
           speedX: (Math.random() - 0.5) * 4,
           speedY: (Math.random() - 0.5) * 4,
+          radius: Math.random() * 3 + 1,
           alpha: 1,
-          fade: 0.02,
-          color
+          fade: 0.03,
+          color: colors[Math.floor(Math.random() * colors.length)]
         });
       }
     }
@@ -256,18 +258,16 @@
         ctx.fill();
         ctx.globalAlpha = 1;
 
-        if (p.speed !== undefined) p.y += p.speed;
-        if (p.speedX !== undefined) p.x += p.speedX;
-        if (p.speedY !== undefined) p.y += p.speedY;
-
+        p.x += p.speedX || 0;
+        p.y += p.speedY || 0;
         p.alpha -= p.fade || 0.01;
+
         if (p.alpha <= 0) particles.splice(index, 1);
       });
     }
 
-    setInterval(() => addStar(), 3000);
-    window.addEventListener('mousemove', (e) => createBurst(e.clientX, e.clientY, '#ffffff'));
-    window.addEventListener('click', (e) => createBurst(e.clientX, e.clientY, '#00bcd4'));
+    setInterval(() => addStar(), 200);
+    window.addEventListener('click', e => createBurst(e.clientX, e.clientY));
 
     function animate() {
       requestAnimationFrame(animate);
