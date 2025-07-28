@@ -25,6 +25,15 @@
       background: linear-gradient(145deg, var(--dark), #111822);
       color: var(--white);
       overflow-x: hidden;
+      position: relative;
+    }
+
+    canvas#effects {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
     }
 
     header {
@@ -111,22 +120,6 @@
       background: linear-gradient(45deg, #1de9b6, var(--primary));
     }
 
-    .button::before {
-      content: '';
-      position: absolute;
-      top: -100%;
-      left: -100%;
-      width: 200%;
-      height: 200%;
-      background: rgba(255, 255, 255, 0.2);
-      transform: rotate(45deg);
-      transition: transform 0.5s;
-    }
-
-    .button:hover::before {
-      transform: rotate(45deg) translate(50%, 50%);
-    }
-
     .extra-section {
       margin-top: 4rem;
       background: #111;
@@ -136,17 +129,6 @@
       animation: fadeInUp 1.2s ease-in;
     }
 
-    .extra-section h2 {
-      margin-bottom: 1.5rem;
-      font-size: 2rem;
-    }
-
-    .extra-section p {
-      font-size: 1.1rem;
-      line-height: 1.6;
-      color: #ddd;
-    }
-
     footer {
       text-align: center;
       padding: 2rem;
@@ -154,7 +136,6 @@
       color: #888;
     }
 
-    /* Animations */
     @keyframes fadeInDown {
       from { opacity: 0; transform: translateY(-30px); }
       to { opacity: 1; transform: translateY(0); }
@@ -193,6 +174,8 @@
   </style>
 </head>
 <body>
+  <canvas id="effects"></canvas>
+
   <header>
     <h1>🌬️ Welcome to BreezeMC!</h1>
     <p>The ultimate Minecraft experience for true vanilla lovers!</p>
@@ -224,5 +207,73 @@
   <footer>
     <p>© 2025 BreezeMC — All rights reserved.</p>
   </footer>
+
+  <script>
+    const canvas = document.getElementById('effects');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function addStar() {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: 0,
+        radius: Math.random() * 1.5 + 0.5,
+        speed: Math.random() * 2 + 1,
+        alpha: 1,
+        color: '#ffffff'
+      });
+    }
+
+    function createBurst(x, y, color = '#ffffff') {
+      for (let i = 0; i < 10; i++) {
+        particles.push({
+          x,
+          y,
+          radius: Math.random() * 3 + 1,
+          speedX: (Math.random() - 0.5) * 4,
+          speedY: (Math.random() - 0.5) * 4,
+          alpha: 1,
+          fade: 0.02,
+          color
+        });
+      }
+    }
+
+    function updateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, index) => {
+        ctx.globalAlpha = p.alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        if (p.speed !== undefined) p.y += p.speed;
+        if (p.speedX !== undefined) p.x += p.speedX;
+        if (p.speedY !== undefined) p.y += p.speedY;
+
+        p.alpha -= p.fade || 0.01;
+        if (p.alpha <= 0) particles.splice(index, 1);
+      });
+    }
+
+    setInterval(() => addStar(), 3000);
+    window.addEventListener('mousemove', (e) => createBurst(e.clientX, e.clientY, '#ffffff'));
+    window.addEventListener('click', (e) => createBurst(e.clientX, e.clientY, '#00bcd4'));
+
+    function animate() {
+      requestAnimationFrame(animate);
+      updateParticles();
+    }
+    animate();
+  </script>
 </body>
 </html>
