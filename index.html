@@ -11,6 +11,9 @@
       --accent: #e0f7fa;
       --dark: #0a0a0a;
       --white: #ffffff;
+      --chat-bg: #0f1621;
+      --chat-msg-bg: #1a2639;
+      --chat-input-bg: #151f2e;
     }
 
     * {
@@ -131,6 +134,94 @@
       animation: fadeInUp 1.2s ease-in;
     }
 
+    /* Chat Section Styles */
+    .chat-section {
+      margin-top: 4rem;
+      background: var(--chat-bg);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+      animation: fadeInUp 1.2s ease-in;
+      text-align: left;
+    }
+
+    .chat-container {
+      height: 400px;
+      overflow-y: auto;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 0.5rem;
+      background: var(--chat-input-bg);
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    .chat-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .message {
+      background: var(--chat-msg-bg);
+      padding: 0.8rem 1rem;
+      border-radius: 0.5rem;
+      max-width: 80%;
+      word-wrap: break-word;
+      animation: slideUp 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: var(--primary);
+      color: #000;
+      border-bottom-right-radius: 0;
+    }
+
+    .message.other {
+      align-self: flex-start;
+      border-bottom-left-radius: 0;
+    }
+
+    .message-info {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-bottom: 0.3rem;
+    }
+
+    .chat-input {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    #message-input {
+      flex: 1;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      background: var(--chat-input-bg);
+      color: var(--white);
+      font-family: 'Open Sans', sans-serif;
+      font-size: 1rem;
+    }
+
+    #send-button {
+      padding: 0 1.5rem;
+      background: var(--primary);
+      color: #000;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
+
+    #send-button:hover {
+      background: #00e5ff;
+      transform: scale(1.02);
+    }
+
     footer {
       text-align: center;
       padding: 2rem;
@@ -202,6 +293,25 @@
     </div>
   </section>
 
+  <!-- New Chat Section -->
+  <section class="chat-section">
+    <h2>💬 Community Chat</h2>
+    <p>Chat with other visitors in real-time!</p>
+    <div class="chat-container">
+      <div class="chat-messages" id="chat-messages">
+        <!-- Messages will appear here -->
+        <div class="message other">
+          <div class="message-info">System • Just now</div>
+          <div>Welcome to the BreezeMC community chat! Say hello to other visitors!</div>
+        </div>
+      </div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="message-input" placeholder="Type your message here..." autocomplete="off">
+      <button id="send-button">Send</button>
+    </div>
+  </section>
+
   <section class="extra-section">
     <h2>🌀 About BreezeMC</h2>
     <p>BreezeMC is more than just a server – it's a thriving community of passionate Minecraft players. Whether you're building majestic castles, trading rare items, fighting PvP battles, or chilling with your friends, you'll find your place here. We value fairness, creativity, and fun!</p>
@@ -213,9 +323,12 @@
   </footer>
 
   <script>
+    // Enhanced cursor trail with connected lines
     const canvas = document.getElementById('effects');
     const ctx = canvas.getContext('2d');
     let particles = [];
+    let lastX = null;
+    let lastY = null;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -224,69 +337,78 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    function spawnParticle() {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: canvas.height + 5,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: -(0.5 + Math.random() * 0.5),
-        radius: Math.random() * 1.2 + 0.8,
-        alpha: 1,
-        fade: 0.002,
-        hue: 190 + Math.random() * 30
-      });
-    }
-
-    function burst(x, y) {
-      for (let i = 0; i < 20; i++) {
-        const speed = 1 + Math.random() * 2;
-        const angle = Math.random() * Math.PI * 2;
-        particles.push({
-          x, y,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          radius: Math.random() * 2 + 1,
-          alpha: 1,
-          fade: 0.02,
-          hue: 190 + Math.random() * 30
-        });
-      }
-    }
-
-    // Cursor trail
+    // Cursor trail with connected lines
     window.addEventListener('mousemove', e => {
-      for (let i = 0; i < 2; i++) {
-        particles.push({
-          x: e.clientX + Math.random()*10 - 5,
-          y: e.clientY + Math.random()*10 - 5,
-          vx: (Math.random() - 0.5) * 0.2,
-          vy: (Math.random() - 0.5) * 0.2,
-          radius: Math.random() * 1.5 + 0.5,
-          alpha: 1,
-          fade: 0.01,
-          hue: 190 + Math.random() * 30
-        });
+      const x = e.clientX;
+      const y = e.clientY;
+      
+      if (lastX !== null && lastY !== null) {
+        // Create a smooth trail between points
+        const distance = Math.sqrt(Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2));
+        const steps = Math.max(2, Math.floor(distance / 5));
+        
+        for (let i = 0; i < steps; i++) {
+          const ratio = i / steps;
+          const trailX = lastX + (x - lastX) * ratio;
+          const trailY = lastY + (y - lastY) * ratio;
+          
+          particles.push({
+            x: trailX,
+            y: trailY,
+            vx: 0,
+            vy: 0,
+            radius: 1.5 - (i / steps * 1),
+            alpha: 1 - (i / steps * 0.7),
+            fade: 0.02,
+            hue: 190 + Math.random() * 30
+          });
+        }
       }
+      
+      lastX = x;
+      lastY = y;
     });
 
     function drawParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p, i) => {
+      
+      // Draw particles as connected dots
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        
+        if (i > 0) {
+          const prev = particles[i-1];
+          const distance = Math.sqrt(Math.pow(p.x - prev.x, 2) + Math.pow(p.y - prev.y, 2));
+          
+          if (distance < 50) { // Only connect close points
+            ctx.beginPath();
+            ctx.moveTo(prev.x, prev.y);
+            ctx.lineTo(p.x, p.y);
+            ctx.strokeStyle = `hsla(${p.hue}, 80%, 70%, ${p.alpha * 0.7})`;
+            ctx.stroke();
+          }
+        }
+        
         ctx.globalAlpha = p.alpha;
         ctx.fillStyle = `hsla(${p.hue}, 80%, 70%, 1)`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();
+        
         p.x += p.vx;
         p.y += p.vy;
         p.alpha -= p.fade;
-        if (p.alpha <= 0) particles.splice(i, 1);
-      });
+      }
+      
+      // Remove faded particles
+      particles = particles.filter(p => p.alpha > 0);
       ctx.globalAlpha = 1;
     }
 
-    setInterval(spawnParticle, 100);
-    window.addEventListener('click', e => burst(e.clientX, e.clientY));
     (function animate() {
       requestAnimationFrame(animate);
       drawParticles();
@@ -297,6 +419,118 @@
     const newCount = parseInt(visitCount) + 1;
     localStorage.setItem('visitCount', newCount);
     document.getElementById('visit-count').innerText = `🌍 Total Visits (on this device): ${newCount}`;
+
+    // Chat System with Firebase (simulated for demo)
+    const chatMessages = document.getElementById('chat-messages');
+    const messageInput = document.getElementById('message-input');
+    const sendButton = document.getElementById('send-button');
+
+    // Generate random username for demo
+    const adjectives = ['Happy', 'Cool', 'Mystic', 'Epic', 'Awesome', 'Legendary', 'Funny', 'Silly'];
+    const nouns = ['Miner', 'Builder', 'Creeper', 'Enderman', 'Gamer', 'Explorer', 'Farmer', 'Wizard'];
+    const randomUsername = `${adjectives[Math.floor(Math.random() * adjectives.length)]}${nouns[Math.floor(Math.random() * nouns.length)]}${Math.floor(Math.random() * 1000)}`;
+    
+    // Load messages from localStorage (simulated database)
+    function loadMessages() {
+      const messages = JSON.parse(localStorage.getItem('breezemc-chat') || '[]');
+      chatMessages.innerHTML = '';
+      
+      messages.slice(-50).forEach(msg => {
+        addMessage(msg.username, msg.text, msg.timestamp, msg.isCurrentUser);
+      });
+      
+      // Scroll to bottom
+      setTimeout(() => {
+        document.querySelector('.chat-container').scrollTop = document.querySelector('.chat-container').scrollHeight;
+      }, 100);
+    }
+    
+    // Add a new message to the chat
+    function addMessage(username, text, timestamp, isCurrentUser) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${isCurrentUser ? 'user' : 'other'}`;
+      
+      const now = new Date(timestamp || Date.now());
+      const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      messageDiv.innerHTML = `
+        <div class="message-info">${username} • ${timeString}</div>
+        <div>${text}</div>
+      `;
+      
+      chatMessages.appendChild(messageDiv);
+      
+      // Scroll to bottom
+      document.querySelector('.chat-container').scrollTop = document.querySelector('.chat-container').scrollHeight;
+    }
+    
+    // Send a new message
+    function sendMessage() {
+      const text = messageInput.value.trim();
+      if (!text) return;
+      
+      const message = {
+        username: randomUsername,
+        text: text,
+        timestamp: Date.now(),
+        isCurrentUser: true
+      };
+      
+      // Save to localStorage (simulated database)
+      const messages = JSON.parse(localStorage.getItem('breezemc-chat') || '[]');
+      messages.push(message);
+      localStorage.setItem('breezemc-chat', JSON.stringify(messages));
+      
+      // Add to chat
+      addMessage(message.username, message.text, message.timestamp, true);
+      
+      // Clear input
+      messageInput.value = '';
+      
+      // Simulate response after a delay
+      if (Math.random() > 0.7) {
+        setTimeout(() => {
+          const responses = [
+            "Hey there! 👋",
+            "Nice to meet you!",
+            "Anyone playing Minecraft right now?",
+            "BreezeMC is awesome!",
+            "What's your favorite Minecraft biome?",
+            "Just joined the server, it's great!",
+            "See you in-game!",
+            "Building a castle right now 😊"
+          ];
+          
+          const botMessage = {
+            username: ['FriendlyBot', 'MinecraftFan', 'ServerHelper'][Math.floor(Math.random() * 3)],
+            text: responses[Math.floor(Math.random() * responses.length)],
+            timestamp: Date.now(),
+            isCurrentUser: false
+          };
+          
+          messages.push(botMessage);
+          localStorage.setItem('breezemc-chat', JSON.stringify(messages));
+          addMessage(botMessage.username, botMessage.text, botMessage.timestamp, false);
+        }, 1000 + Math.random() * 3000);
+      }
+    }
+    
+    // Event listeners
+    sendButton.addEventListener('click', sendMessage);
+    messageInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+    
+    // Load messages on page load
+    loadMessages();
+    
+    // Simulate periodic message updates
+    setInterval(() => {
+      const messages = JSON.parse(localStorage.getItem('breezemc-chat') || '[]');
+      if (messages.length > chatMessages.children.length - 1) { // -1 for initial message
+        loadMessages();
+      }
+    }, 3000);
   </script>
 </body>
 </html>
