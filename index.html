@@ -12,14 +12,7 @@
       --dark: #0a0a0a;
       --white: #ffffff;
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
     body {
       font-family: 'Open Sans', sans-serif;
       background: linear-gradient(145deg, var(--dark), #111822);
@@ -27,7 +20,6 @@
       overflow-x: hidden;
       position: relative;
     }
-
     canvas#effects {
       position: fixed;
       top: 0;
@@ -37,153 +29,52 @@
       pointer-events: none;
       z-index: 9999;
     }
-
-    header {
-      background: var(--primary);
-      color: var(--dark);
-      padding: 2rem;
-      text-align: center;
-      animation: fadeInDown 1s ease-out;
-      box-shadow: 0 4px 10px rgba(0, 188, 212, 0.4);
+    header { background: var(--primary); color: var(--dark); padding: 2rem; text-align: center; animation: fadeInDown 1s ease-out; box-shadow: 0 4px 10px rgba(0, 188, 212, 0.4); }
+    header h1 { font-family: 'Orbitron', sans-serif; font-size: 3rem; animation: glow 2s infinite alternate; }
+    header p { margin-top: 0.5rem; font-size: 1.2rem; }
+    section { padding: 4rem 2rem; max-width: 1000px; margin: auto; text-align: center; animation: fadeInUp 1s ease-in; }
+    h2 { color: var(--primary); margin-bottom: 1rem; font-size: 2rem; animation: fadeInScale 1s ease; }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem; }
+    .feature { background: #10141f; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 0 15px rgba(0, 229, 255, 0.3); transition: transform 0.3s ease, background 0.3s; animation: slideUp 0.8s ease forwards; }
+    .feature:hover { transform: scale(1.05); background: #151a25; box-shadow: 0 0 20px rgba(0, 229, 255, 0.5); }
+    .cta { margin-top: 3rem; font-size: 1.3rem; animation: pulse 2s infinite; }
+    .button { display: inline-block; background: linear-gradient(45deg, var(--primary), #1de9b6); color: #000; padding: 1rem 2.5rem; border-radius: 3rem; margin: 1rem; text-decoration: none; font-weight: bold; box-shadow: 0 0 15px rgba(0, 229, 255, 0.5); position: relative; overflow: hidden; transition: all 0.3s ease; animation: bounceIn 1s ease-in-out; }
+    .button:hover { transform: scale(1.08); background: linear-gradient(45deg, #1de9b6, var(--primary)); }
+    .extra-section { margin-top: 4rem; background: #111; padding: 3rem; border-radius: 1rem; box-shadow: 0 0 30px rgba(0, 229, 255, 0.3); animation: fadeInUp 1.2s ease-in; }
+    footer { text-align: center; padding: 2rem; background: #090c12; color: #888; font-size: 0.95rem; }
+    #message-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      z-index: 10000;
     }
-
-    header h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 3rem;
-      animation: glow 2s infinite alternate;
+    #message-bar input {
+      width: 300px;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
     }
-
-    header p {
-      margin-top: 0.5rem;
-      font-size: 1.2rem;
-    }
-
-    section {
-      padding: 4rem 2rem;
-      max-width: 1000px;
-      margin: auto;
-      text-align: center;
-      animation: fadeInUp 1s ease-in;
-    }
-
-    h2 {
-      color: var(--primary);
-      margin-bottom: 1rem;
-      font-size: 2rem;
-      animation: fadeInScale 1s ease;
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-
-    .feature {
-      background: #10141f;
-      padding: 1.5rem;
-      border-radius: 1rem;
-      box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
-      transition: transform 0.3s ease, background 0.3s;
-      animation: slideUp 0.8s ease forwards;
-    }
-
-    .feature:hover {
-      transform: scale(1.05);
-      background: #151a25;
-      box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
-    }
-
-    .cta {
-      margin-top: 3rem;
-      font-size: 1.3rem;
-      animation: pulse 2s infinite;
-    }
-
-    .button {
-      display: inline-block;
-      background: linear-gradient(45deg, var(--primary), #1de9b6);
-      color: #000;
-      padding: 1rem 2.5rem;
-      border-radius: 3rem;
-      margin: 1rem;
-      text-decoration: none;
-      font-weight: bold;
-      box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      animation: bounceIn 1s ease-in-out;
-    }
-
-    .button:hover {
-      transform: scale(1.08);
-      background: linear-gradient(45deg, #1de9b6, var(--primary));
-    }
-
-    .extra-section {
-      margin-top: 4rem;
-      background: #111;
-      padding: 3rem;
-      border-radius: 1rem;
-      box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
-      animation: fadeInUp 1.2s ease-in;
-    }
-
-    footer {
-      text-align: center;
-      padding: 2rem;
-      background: #090c12;
-      color: #888;
-      font-size: 0.95rem;
-    }
-
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeInScale {
-      0% { opacity: 0; transform: scale(0.8); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-    @keyframes glow {
-      0% { text-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff; }
-      100% { text-shadow: 0 0 20px #00e5ff, 0 0 40px #00e5ff; }
-    }
-
-    @keyframes bounceIn {
-      0% { transform: scale(0.8); opacity: 0; }
-      60% { transform: scale(1.1); opacity: 1; }
-      100% { transform: scale(1); }
-    }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInScale { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    @keyframes glow { 0% { text-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff; } 100% { text-shadow: 0 0 20px #00e5ff, 0 0 40px #00e5ff; } }
+    @keyframes bounceIn { 0% { transform: scale(0.8); opacity: 0; } 60% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
   </style>
 </head>
 <body>
   <canvas id="effects"></canvas>
-
   <header>
     <h1>🌬️ Welcome to BreezeMC!</h1>
     <p>The ultimate Minecraft experience for true vanilla lovers!</p>
   </header>
-
   <section>
     <h2>🌟 Features You'll Love</h2>
     <div class="features">
@@ -201,82 +92,66 @@
       <a href="https://discord.gg/tdaTn2xDrq" class="button" target="_blank">💬 Join our Discord</a>
     </div>
   </section>
-
   <section class="extra-section">
     <h2>🌀 About BreezeMC</h2>
-    <p>BreezeMC is more than just a server – it's a thriving community of passionate Minecraft players. Whether you're building majestic castles, trading rare items, fighting PvP battles, or chilling with your friends, you'll find your place here. We value fairness, creativity, and fun!</p>
+    <p>BreezeMC is more than just a server – it's a thriving community of passionate Minecraft players...</p>
   </section>
-
   <footer>
     <p>© 2025 BreezeMC — All rights reserved.</p>
     <p id="visit-count">🌍 Total Visits: loading...</p>
   </footer>
-
+  <div id="message-bar">
+    <input id="message-input" maxlength="30" placeholder="Leave a message..."/>
+  </div>
   <script>
     const canvas = document.getElementById('effects');
     const ctx = canvas.getContext('2d');
-    let particles = [];
-
+    let particles = [], messages = [];
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
-
-    function spawnParticle() {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: canvas.height + 5,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: -(0.5 + Math.random() * 0.5),
-        radius: Math.random() * 1.2 + 0.8,
-        alpha: 1,
-        fade: 0.002,
-        hue: 190 + Math.random() * 30
-      });
+    function drawStar(x, y, radius, points, inset, color) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.translate(x, y);
+      ctx.moveTo(0, 0 - radius);
+      for (let i = 0; i < points; i++) {
+        ctx.rotate(Math.PI / points);
+        ctx.lineTo(0, 0 - radius * inset);
+        ctx.rotate(Math.PI / points);
+        ctx.lineTo(0, 0 - radius);
+      }
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.restore();
     }
-
+    function spawnParticle() {
+      particles.push({ x: Math.random() * canvas.width, y: canvas.height + 5, vx: (Math.random() - 0.5) * 0.3, vy: -(0.5 + Math.random() * 0.5), radius: 1, alpha: 1, fade: 0.002, color: 'aqua' });
+    }
     function burst(x, y) {
       for (let i = 0; i < 20; i++) {
-        const speed = 1 + Math.random() * 2;
         const angle = Math.random() * Math.PI * 2;
-        particles.push({
-          x, y,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          radius: Math.random() * 2 + 1,
-          alpha: 1,
-          fade: 0.02,
-          hue: 190 + Math.random() * 30
-        });
+        particles.push({ x, y, vx: Math.cos(angle) * 2, vy: Math.sin(angle) * 2, radius: 4, alpha: 1, fade: 0.02, color: Math.random() > 0.5 ? 'aqua' : 'white', shape: 'star' });
       }
     }
-
-    // Cursor trail
     window.addEventListener('mousemove', e => {
-      for (let i = 0; i < 2; i++) {
-        particles.push({
-          x: e.clientX + Math.random()*10 - 5,
-          y: e.clientY + Math.random()*10 - 5,
-          vx: (Math.random() - 0.5) * 0.2,
-          vy: (Math.random() - 0.5) * 0.2,
-          radius: Math.random() * 1.5 + 0.5,
-          alpha: 1,
-          fade: 0.01,
-          hue: 190 + Math.random() * 30
-        });
-      }
+      particles.push({ x: e.clientX, y: e.clientY, vx: 0, vy: 0, radius: 1.2, alpha: 1, fade: 0.015, color: 'white', shape: 'line' });
     });
-
     function drawParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach((p, i) => {
         ctx.globalAlpha = p.alpha;
-        ctx.fillStyle = `hsla(${p.hue}, 80%, 70%, 1)`;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fill();
+        if (p.shape === 'star') drawStar(p.x, p.y, p.radius, 5, 0.5, p.color);
+        else {
+          ctx.beginPath();
+          ctx.fillStyle = p.color;
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
         p.x += p.vx;
         p.y += p.vy;
         p.alpha -= p.fade;
@@ -284,19 +159,30 @@
       });
       ctx.globalAlpha = 1;
     }
-
     setInterval(spawnParticle, 100);
     window.addEventListener('click', e => burst(e.clientX, e.clientY));
-    (function animate() {
-      requestAnimationFrame(animate);
-      drawParticles();
-    })();
+    (function animate() { requestAnimationFrame(animate); drawParticles(); })();
 
-    // Visit Counter (localStorage-based for demo)
-    const visitCount = localStorage.getItem('visitCount') || 0;
-    const newCount = parseInt(visitCount) + 1;
-    localStorage.setItem('visitCount', newCount);
-    document.getElementById('visit-count').innerText = `🌍 Total Visits (on this device): ${newCount}`;
+    // Visit counter using localStorage + simple cloud count (mock)
+    let total = parseInt(localStorage.getItem('totalVisits') || 0) + 1;
+    localStorage.setItem('totalVisits', total);
+    document.getElementById('visit-count').innerText = `🌍 Total Visits: ${total}`;
+
+    // Message system
+    const msgInput = document.getElementById('message-input');
+    let msgLog = JSON.parse(localStorage.getItem('messages') || '[]').filter(m => Date.now() - m.time < 12 * 3600000);
+    let msgCount = 0;
+    msgInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        if (msgInput.value.trim().length > 0 && msgCount < 5) {
+          msgLog.push({ text: msgInput.value.trim(), time: Date.now() });
+          localStorage.setItem('messages', JSON.stringify(msgLog));
+          msgCount++;
+          msgInput.value = '';
+        }
+      }
+    });
+    setInterval(() => { msgCount = 0; }, 60000);
   </script>
 </body>
 </html>
