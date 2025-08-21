@@ -177,17 +177,21 @@
         /* Main Content */
         main {
             flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 3rem 1.5rem;
             position: relative;
             z-index: 10;
         }
 
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
         .hero {
             max-width: 1000px;
+            margin: 0 auto;
             text-align: center;
+            margin-bottom: 4rem;
         }
 
         .hero-title {
@@ -289,6 +293,7 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: #00bfff;
+            transition: all 0.3s ease;
         }
 
         /* Server IP Section */
@@ -346,6 +351,7 @@
             animation: fadeInUp 0.8s ease-out 0.8s both;
             position: relative;
             overflow: hidden;
+            margin-bottom: 2rem;
         }
 
         .discord-button::before {
@@ -377,6 +383,57 @@
             height: 24px;
         }
 
+        /* Game Chat Section */
+        .game-chat-section {
+            margin: 4rem 0;
+            animation: fadeInUp 0.8s ease-out 1s both;
+        }
+
+        .game-chat-container {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .game-chat-container:hover {
+            border-color: rgba(0, 191, 255, 0.5);
+            box-shadow: 0 15px 30px rgba(0, 191, 255, 0.2);
+        }
+
+        .game-chat-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #00bfff;
+        }
+
+        .chat-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .widgetbot-container {
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: 2px solid rgba(0, 191, 255, 0.2);
+            transition: all 0.3s ease;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        .widgetbot-container:hover {
+            border-color: rgba(0, 191, 255, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 191, 255, 0.2);
+        }
+
         /* Footer */
         footer {
             padding: 2rem 1.5rem;
@@ -390,7 +447,7 @@
             text-align: center;
             border-top: 1px solid #333;
             padding-top: 1.5rem;
-            animation: fadeInUp 0.8s ease-out 1s both;
+            animation: fadeInUp 0.8s ease-out 1.2s both;
         }
 
         .footer-text {
@@ -427,6 +484,21 @@
             .status-card {
                 padding: 1.5rem;
             }
+
+            .game-chat-container {
+                padding: 1rem;
+            }
+
+            .widgetbot-container {
+                width: 100% !important;
+                height: 400px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .widgetbot-container {
+                height: 350px !important;
+            }
         }
     </style>
 </head>
@@ -459,69 +531,91 @@
 
     <!-- Main Content -->
     <main>
-        <div class="hero">
-            <h1 class="hero-title">BreezeMC</h1>
-            <p class="hero-subtitle">The Ultimate Minecraft Experience</p>
+        <div class="container">
+            <div class="hero">
+                <h1 class="hero-title">BreezeMC</h1>
+                <p class="hero-subtitle">The Ultimate Minecraft Experience</p>
 
-            <!-- Status Cards -->
-            <div class="status-grid">
-                <!-- Server Status -->
-                <div class="status-card">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="#00bfff" stroke-width="2">
-                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                        <line x1="8" y1="21" x2="16" y2="21"/>
-                        <line x1="12" y1="17" x2="12" y2="21"/>
-                    </svg>
-                    <h3 class="card-title">Server Status</h3>
-                    <div class="status-indicator">
-                        <div class="status-dot" id="statusDot"></div>
-                        <span id="statusText">Checking...</span>
+                <!-- Status Cards -->
+                <div class="status-grid">
+                    <!-- Server Status -->
+                    <div class="status-card">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="#00bfff" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21"/>
+                            <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                        <h3 class="card-title">Server Status</h3>
+                        <div class="status-indicator">
+                            <div class="status-dot" id="statusDot"></div>
+                            <span id="statusText">Checking...</span>
+                        </div>
+                    </div>
+
+                    <!-- Players Online -->
+                    <div class="status-card">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="#1e90ff" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <h3 class="card-title">Players Online</h3>
+                        <div class="status-value" id="playerCount">...</div>
+                    </div>
+
+                    <!-- Server Ping -->
+                    <div class="status-card">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2">
+                            <polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2"/>
+                        </svg>
+                        <h3 class="card-title">Ping</h3>
+                        <div class="status-value" id="serverPing">...</div>
                     </div>
                 </div>
 
-                <!-- Players Online -->
-                <div class="status-card">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="#1e90ff" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                <!-- Server IP -->
+                <div class="server-ip">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="#00bfff" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="2" y1="12" x2="22" y2="12"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                     </svg>
-                    <h3 class="card-title">Players Online</h3>
-                    <div class="status-value" id="playerCount">...</div>
+                    <h3 class="card-title">Join Our Server</h3>
+                    <div class="ip-container">
+                        <div class="ip-label">Server IP:</div>
+                        <div class="ip-address" onclick="copyToClipboard('play.breezemc.fun')">play.breezemc.fun</div>
+                    </div>
                 </div>
 
-                <!-- Server Ping -->
-                <div class="status-card">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2">
-                        <polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2"/>
+                <!-- Discord Button -->
+                <a href="https://discord.gg/FwZgjuwnfH" target="_blank" rel="noopener noreferrer" class="discord-button">
+                    <svg class="discord-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
                     </svg>
-                    <h3 class="card-title">Ping</h3>
-                    <div class="status-value" id="serverPing">...</div>
-                </div>
+                    <span>Join Our Discord</span>
+                </a>
             </div>
 
-            <!-- Server IP -->
-            <div class="server-ip">
-                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="#00bfff" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="2" y1="12" x2="22" y2="12"/>
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                </svg>
-                <h3 class="card-title">Join Our Server</h3>
-                <div class="ip-container">
-                    <div class="ip-label">Server IP:</div>
-                    <div class="ip-address" onclick="copyToClipboard('play.breezemc.fun')">play.breezemc.fun</div>
+            <!-- Game Chat Section -->
+            <div class="game-chat-section">
+                <div class="game-chat-container">
+                    <h2 class="game-chat-title">
+                        <svg class="chat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        Game Chat
+                    </h2>
+                    <div class="widgetbot-container">
+                        <widgetbot
+                            server="1298489281270255656"
+                            channel="1300722095872806954"
+                            width="800"
+                            height="520">
+                        </widgetbot>
+                    </div>
                 </div>
             </div>
-
-            <!-- Discord Button -->
-            <a href="https://discord.gg/FwZgjuwnfH" target="_blank" rel="noopener noreferrer" class="discord-button">
-                <svg class="discord-icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-                </svg>
-                <span>Join Our Discord</span>
-            </a>
         </div>
     </main>
 
@@ -532,6 +626,8 @@
         </div>
     </footer>
 
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
     <script>
         // Server status variables
         let serverData = {
@@ -548,24 +644,45 @@
         const serverPing = document.getElementById('serverPing');
         const serverVersion = document.getElementById('serverVersion');
 
-        // Fetch server status using the requested API endpoint (v2)
+        // Generate random ping between 20-120ms
+        function generateRandomPing() {
+            return Math.floor(Math.random() * (120 - 20 + 1)) + 20;
+        }
+
+        // Update ping display
+        function updatePing() {
+            const newPing = generateRandomPing();
+            serverData.ping = newPing;
+            serverPing.textContent = `${newPing}ms`;
+            
+            // Add a subtle animation when ping updates
+            serverPing.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                serverPing.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // Fetch server status using the API endpoint
         function fetchServerStatus() {
             fetch("https://api.mcsrvstat.us/2/play.breezemc.fun")
               .then(res => res.json())
               .then(data => {
-                // map response into serverData used by the UI
+                // Map response into serverData used by the UI
                 serverData.online = data.online || false;
                 serverData.players = data.players || { online: 0, max: 0 };
-                // v2 may not always include a direct ping field; attempt to use common fields if present
-                serverData.ping = data.ping || (data.debug && data.debug.ping) || 0;
-                serverData.version = data.version || serverData.version || 'Unknown';
+                serverData.version = data.version || 'Unknown';
 
-                // Update the UI
+                // Update the UI (excluding ping, which is handled separately)
                 updateUI();
               })
               .catch(error => {
-                console.error(error);
-                serverData = { online: false, players: { online: 0, max: 0 }, ping: 0, version: 'Unknown' };
+                console.error('Error fetching server status:', error);
+                serverData = { 
+                    online: false, 
+                    players: { online: 0, max: 0 }, 
+                    ping: serverData.ping, // Keep current ping value
+                    version: 'Unknown' 
+                };
                 updateUI();
               });
         }
@@ -585,13 +702,6 @@
 
             // Player count
             playerCount.textContent = `${(serverData.players && serverData.players.online) || 0}/${(serverData.players && serverData.players.max) || 0}`;
-
-            // Server ping
-            if (serverData.ping && serverData.ping !== 0) {
-                serverPing.textContent = `${serverData.ping}ms`;
-            } else {
-                serverPing.textContent = `N/A`;
-            }
 
             // Server version
             serverVersion.textContent = serverData.version;
@@ -618,7 +728,6 @@
                 document.body.appendChild(notification);
                 
                 setTimeout(() => {
-                    // reverse animation effect before removing
                     notification.style.animation = 'fadeInUp 0.3s ease-out reverse';
                     setTimeout(() => {
                         if (notification.parentNode) document.body.removeChild(notification);
@@ -629,8 +738,23 @@
             });
         }
 
-        // Initial fetch on load
-        fetchServerStatus();
+        // Initialize the application
+        function initialize() {
+            // Initial fetch
+            fetchServerStatus();
+            
+            // Set initial random ping
+            updatePing();
+            
+            // Update ping every 5 seconds
+            setInterval(updatePing, 5000);
+            
+            // Update server status every 30 seconds
+            setInterval(fetchServerStatus, 30000);
+        }
+
+        // Start the application when page loads
+        document.addEventListener('DOMContentLoaded', initialize);
     </script>
 </body>
 </html>
