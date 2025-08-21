@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>BreezeMC - Premium Minecraft Server</title>
     <style>
         * {
@@ -548,25 +548,26 @@
         const serverPing = document.getElementById('serverPing');
         const serverVersion = document.getElementById('serverVersion');
 
-        // Fetch server status
-        async function fetchServerStatus() {
-            try {
-                const response = await fetch('https://api.mcsrvstat.us/3/play.breezemc.fun');
-                const data = await response.json();
-                
-                serverData = {
-                    online: data.online || false,
-                    players: data.players || { online: 0, max: 0 },
-                    ping: data.ping || 0,
-                    version: data.version || 'Unknown'
-                };
-                
+        // Fetch server status using the requested API endpoint (v2)
+        function fetchServerStatus() {
+            fetch("https://api.mcsrvstat.us/2/play.breezemc.fun")
+              .then(res => res.json())
+              .then(data => {
+                // map response into serverData used by the UI
+                serverData.online = data.online || false;
+                serverData.players = data.players || { online: 0, max: 0 };
+                // v2 may not always include a direct ping field; attempt to use common fields if present
+                serverData.ping = data.ping || (data.debug && data.debug.ping) || 0;
+                serverData.version = data.version || serverData.version || 'Unknown';
+
+                // Update the UI
                 updateUI();
-            } catch (error) {
-                console.error('Failed to fetch server status:', error);
+              })
+              .catch(error => {
+                console.error(error);
                 serverData = { online: false, players: { online: 0, max: 0 }, ping: 0, version: 'Unknown' };
                 updateUI();
-            }
+              });
         }
 
         // Update UI with server data
@@ -583,10 +584,14 @@
             }
 
             // Player count
-            playerCount.textContent = `${serverData.players.online}/${serverData.players.max}`;
+            playerCount.textContent = `${(serverData.players && serverData.players.online) || 0}/${(serverData.players && serverData.players.max) || 0}`;
 
             // Server ping
-            serverPing.textContent = `${serverData.ping}ms`;
+            if (serverData.ping && serverData.ping !== 0) {
+                serverPing.textContent = `${serverData.ping}ms`;
+            } else {
+                serverPing.textContent = `N/A`;
+            }
 
             // Server version
             serverVersion.textContent = serverData.version;
@@ -613,7 +618,19 @@
                 document.body.appendChild(notification);
                 
                 setTimeout(() => {
+                    // reverse animation effect before removing
                     notification.style.animation = 'fadeInUp 0.3s ease-out reverse';
-                    setTimeout(() => document.body.removeChild(notification), 300);
+                    setTimeout(() => {
+                        if (notification.parentNode) document.body.removeChild(notification);
+                    }, 300);
                 }, 2000);
-            }).ca
+            }).catch(err => {
+                console.error('Failed to copy to clipboard:', err);
+            });
+        }
+
+        // Initial fetch on load
+        fetchServerStatus();
+    </script>
+</body>
+</html>
